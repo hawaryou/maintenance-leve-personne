@@ -28,7 +28,22 @@ if(obsolescence && obsolescenceValue){
   obsolescence.addEventListener('input',syncObsolescence);
   syncObsolescence();
 }
-function setupCanvas(id){const c=document.getElementById(id),ctx=c.getContext('2d');function resize(){const r=c.getBoundingClientRect(),d=devicePixelRatio||1;c.width=r.width*d;c.height=r.height*d;ctx.scale(d,d);ctx.lineWidth=2;ctx.lineCap='round'}resize();let drawing=false,last=null;c.addEventListener('pointerdown',e=>{drawing=true;last=[e.offsetX,e.offsetY];c.setPointerCapture(e.pointerId)});c.addEventListener('pointermove',e=>{if(!drawing)return;ctx.beginPath();ctx.moveTo(last[0],last[1]);ctx.lineTo(e.offsetX,e.offsetY);ctx.stroke();last=[e.offsetX,e.offsetY]});c.addEventListener('pointerup',()=>drawing=false);c.addEventListener('pointercancel',()=>drawing=false);return c}const sigTech=setupCanvas('sigTech'),sigClient=setupCanvas('sigClient');document.querySelectorAll('.clear').forEach(b=>b.onclick=()=>{const c=document.getElementById(b.dataset.canvas);c.getContext('2d').clearRect(0,0,c.width,c.height)});
+function setupCanvas(id){
+  const c=document.getElementById(id),ctx=c.getContext('2d');
+  function resize(){
+    const r=c.getBoundingClientRect(),d=window.devicePixelRatio||1;
+    const snapshot=document.createElement('canvas');snapshot.width=c.width||1;snapshot.height=c.height||1;
+    try{snapshot.getContext('2d').drawImage(c,0,0)}catch(e){}
+    c.width=Math.max(1,Math.round(r.width*d));c.height=Math.max(1,Math.round(r.height*d));
+    ctx.setTransform(d,0,0,d,0,0);ctx.lineWidth=2;ctx.lineCap='round';ctx.lineJoin='round';ctx.strokeStyle='#000000';
+    if(snapshot.width>1&&snapshot.height>1){try{ctx.drawImage(snapshot,0,0,snapshot.width,snapshot.height,0,0,r.width,r.height)}catch(e){}}
+  }
+  resize();let drawing=false,last=null;
+  c.addEventListener('pointerdown',e=>{drawing=true;last=[e.offsetX,e.offsetY];ctx.strokeStyle='#000000';c.setPointerCapture(e.pointerId)});
+  c.addEventListener('pointermove',e=>{if(!drawing)return;ctx.beginPath();ctx.moveTo(last[0],last[1]);ctx.lineTo(e.offsetX,e.offsetY);ctx.strokeStyle='#000000';ctx.stroke();last=[e.offsetX,e.offsetY]});
+  c.addEventListener('pointerup',()=>drawing=false);c.addEventListener('pointercancel',()=>drawing=false);
+  return c;
+}const sigTech=setupCanvas('sigTech'),sigClient=setupCanvas('sigClient');document.querySelectorAll('.clear').forEach(b=>b.onclick=()=>{const c=document.getElementById(b.dataset.canvas);c.getContext('2d').clearRect(0,0,c.width,c.height)});
 function signatureDataURL(canvas){
   if(!canvas)return '';
   try{
@@ -38,8 +53,15 @@ function signatureDataURL(canvas){
     const out=document.createElement('canvas');out.width=width;out.height=height;
     const ctx=out.getContext('2d');ctx.fillStyle='#ffffff';ctx.fillRect(0,0,width,height);
     ctx.drawImage(canvas,0,0,canvas.width,canvas.height,0,0,width,height);
-    const pixels=ctx.getImageData(0,0,width,height).data;let ink=false;
-    for(let i=0;i<pixels.length;i+=4){if(pixels[i]<235||pixels[i+1]<235||pixels[i+2]<235){ink=true;break;}}
+    const image=ctx.getImageData(0,0,width,height),pixels=image.data;let ink=false;
+    for(let i=0;i<pixels.length;i+=4){
+      if(pixels[i+3]>12 && (pixels[i]<245||pixels[i+1]<245||pixels[i+2]<245)){
+        ink=true;
+        // Convert every visible stroke to black, preserving its anti-aliased opacity.
+        pixels[i]=0;pixels[i+1]=0;pixels[i+2]=0;
+      }
+    }
+    ctx.putImageData(image,0,0);
     return ink?out.toDataURL('image/png'):'';
   }catch(err){console.error('Capture de signature impossible',err);return '';}
 }
