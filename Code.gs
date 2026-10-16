@@ -1,9 +1,9 @@
 /**
- * ENR11-V02 — Réception et envoi automatique des fiches PDF.
+ * ENR11-V02 — Service indépendant d'envoi des fiches PDF de maintenance lève-personnes.
  * Déployer ce fichier comme une application Web Google Apps Script.
  */
-const DESTINATAIRE = 'valentineuromed@gmail.com';
-const NOM_EXPEDITEUR = 'EuroMed - Fiches de maintenance';
+const ENR11_DESTINATAIRE = 'valentineuromed@gmail.com';
+const ENR11_NOM_EXPEDITEUR = 'EuroMed - Fiches de maintenance';
 
 function doGet() {
   return ContentService
