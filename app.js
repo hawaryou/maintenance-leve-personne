@@ -352,6 +352,7 @@ function openPDFPreview(result){
   if(previewObjectUrl)URL.revokeObjectURL(previewObjectUrl);
   previewObjectUrl=URL.createObjectURL(result.pdf.output('blob'));
   pdfPreviewFrame.src=previewObjectUrl;
+  const openTab=document.getElementById('openPdfPreviewTab');if(openTab)openTab.disabled=false;
   pdfPreviewStatus.textContent='';
   pdfPreviewModal.classList.add('show');pdfPreviewModal.setAttribute('aria-hidden','false');
 }
@@ -391,6 +392,7 @@ document.getElementById('send').onclick=async()=>{
     openPDFPreview(result);
   }catch(e){console.error(e);showMessage(e.message||'Erreur lors de la préparation du PDF.','error')}
 };
+document.getElementById('openPdfPreviewTab')?.addEventListener('click',()=>{if(!previewObjectUrl||!pendingPDFResult)return;const opened=window.open(previewObjectUrl,'_blank');if(!opened){pdfPreviewStatus.textContent='Le navigateur a bloqué le nouvel onglet. Utilisez « Télécharger le PDF » pour ouvrir le document et faire défiler toutes les pages.';}});
 document.getElementById('downloadPreviewPdf').onclick=()=>{
   if(!pendingPDFResult)return;
   pendingPDFResult.pdf.save(pdfFilename(pendingPDFResult));
