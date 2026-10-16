@@ -213,3 +213,19 @@ input[type="radio"]{width:20px;height:20px;vertical-align:middle;}
 html{scroll-padding-bottom:160px}body{padding-bottom:20px}footer{padding-bottom:30px;scroll-margin-bottom:170px}
 @media(max-width:760px){.top{padding-left:12px;padding-top:62px}.hub-menu{top:max(8px,env(safe-area-inset-top));left:max(8px,env(safe-area-inset-left));min-height:42px;padding:0 12px;font-size:13px}.pdf-preview-modal,.privacy-modal{padding:7px}.pdf-preview-card,.privacy-card{max-height:96dvh;padding:12px;border-radius:12px}#pdfPreviewFrame{height:58dvh}.pdf-preview-actions{display:grid;grid-template-columns:1fr}.pdf-preview-actions button{width:100%}body{padding-bottom:190px!important}.actions{z-index:30}.privacy-card{line-height:1.5}}
 @media(max-width:390px){.top{padding-top:58px}.actions{grid-template-columns:1fr!important}.actions .primary{min-height:44px}body{padding-bottom:220px!important}}
+
+
+/* Aperçu PDF mobile : fenêtre et contenu réellement défilables */
+.pdf-preview-modal{align-items:flex-start;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+.pdf-preview-card{margin:auto;min-height:0;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+#pdfPreviewFrame{touch-action:pan-y}
+@media(max-width:760px){
+  .pdf-preview-modal{display:block;padding:env(safe-area-inset-top,8px) 7px calc(12px + env(safe-area-inset-bottom,0px));}
+  .pdf-preview-card{width:100%;max-height:none;height:auto;overflow:visible;margin:0 auto;padding:10px;border-radius:12px}
+  .pdf-preview-head{position:sticky;top:0;z-index:2;background:#fff;padding:2px 0 8px}
+  .pdf-preview-head p{font-size:13px}
+  #pdfPreviewFrame{width:100%;height:52vh;min-height:300px;max-height:600px;display:block}
+  .pdf-preview-actions{display:grid;grid-template-columns:1fr;gap:8px}
+  .pdf-preview-actions button{width:100%;min-height:46px;white-space:normal}
+  .pdf-preview-status{padding-bottom:8px}
+}
