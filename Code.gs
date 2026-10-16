@@ -52,10 +52,10 @@ function doPost(e) {
     ].join('\n');
 
     MailApp.sendEmail({
-      to: DESTINATAIRE,
+      to: ENR11_DESTINATAIRE,
       subject: sujet,
       body: corps,
-      name: NOM_EXPEDITEUR,
+      name: ENR11_NOM_EXPEDITEUR,
       attachments: [blob]
     });
 
