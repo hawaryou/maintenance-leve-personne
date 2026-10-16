@@ -30,6 +30,10 @@
 </style>
 </head>
 <body>
+<a class="hub-menu" href="https://hawaryou.github.io/HUB-euromed/" aria-label="Ouvrir le menu EuroMed" title="Menu EuroMed">
+  <span class="hub-menu-icon" aria-hidden="true"><span></span><span></span><span></span></span><span>Menu</span><span class="hub-menu-arrow" aria-hidden="true">↗</span>
+</a>
+
 <header class="top">
   <img src="euromed-logo.jpeg" alt="EuroMed">
   <div class="code">ENR11-V02</div>
@@ -164,6 +168,25 @@
   </div>
 </main>
 
+<div id="pdfPreviewModal" class="pdf-preview-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="pdfPreviewTitle">
+  <div class="pdf-preview-card">
+    <div class="pdf-preview-head"><div><h2 id="pdfPreviewTitle">Aperçu du PDF</h2><p>Vérifiez le document avec le client avant de l’envoyer.</p></div><button type="button" id="closePdfPreview" class="modal-close" aria-label="Fermer l’aperçu">✕</button></div>
+    <iframe id="pdfPreviewFrame" title="Aperçu du PDF généré"></iframe>
+    <div class="pdf-preview-actions"><button type="button" id="downloadPreviewPdf">⬇ Télécharger le PDF</button><button type="button" id="confirmSendPdf" class="primary">✓ Valider et envoyer par e-mail</button></div>
+    <p id="pdfPreviewStatus" class="pdf-preview-status" aria-live="polite"></p>
+  </div>
+</div>
+<div id="privacyModal" class="privacy-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="privacyTitle">
+  <div class="privacy-card"><button type="button" id="closePrivacy" class="modal-close" aria-label="Fermer la notice">✕</button>
+    <h2 id="privacyTitle">Confidentialité et données personnelles</h2>
+    <p>Cette fiche traite les informations saisies pour réaliser et documenter la maintenance des lève-personnes, puis transmettre le PDF au destinataire EuroMed configuré.</p>
+    <h3>Données concernées</h3><p>Les informations de l’équipement, du client/établissement, de localisation, de l’intervention, les observations et les signatures saisies dans la fiche.</p>
+    <h3>Transmission</h3><p>Lors d’un envoi, le PDF et certains champs de la fiche sont transmis au service Google Apps Script configuré et envoyés à l’adresse EuroMed indiquée dans le script. Le scan de code utilise la caméra uniquement après autorisation du navigateur. Des bibliothèques tierces sont chargées depuis des CDN.</p>
+    <h3>Bonnes pratiques</h3><p>Ne saisissez pas de données de santé ou d’informations personnelles non nécessaires. N’utilisez la fiche que sur un appareil et un réseau autorisés, et vérifiez le destinataire avant l’envoi.</p>
+    <h3>À compléter par EuroMed avant déploiement</h3><p>Identité et coordonnées du responsable de traitement, base légale, durée de conservation, modalités d’exercice des droits, contact confidentialité, et informations sur les prestataires/sous-traitants. Cette notice ne constitue pas à elle seule une garantie de conformité RGPD.</p>
+  </div>
+</div>
+
 <div id="scanSuccessModal" class="scan-success-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="scanSuccessTitle">
   <div class="scan-success-card">
     <div class="scan-success-icon">✓</div>
@@ -175,7 +198,7 @@
   </div>
 </div>
 
-<footer>ENR11-V02 · Fiche de maintenance lève-personnes · EuroMed</footer>
+<footer>ENR11-V02 · Fiche de maintenance lève-personnes · EuroMed · <button type="button" id="openPrivacy" class="privacy-link">Confidentialité et données personnelles</button></footer>
 
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
