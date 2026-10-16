@@ -29,8 +29,26 @@ if(obsolescence && obsolescenceValue){
   syncObsolescence();
 }
 function setupCanvas(id){const c=document.getElementById(id),ctx=c.getContext('2d');function resize(){const r=c.getBoundingClientRect(),d=devicePixelRatio||1;c.width=r.width*d;c.height=r.height*d;ctx.scale(d,d);ctx.lineWidth=2;ctx.lineCap='round'}resize();let drawing=false,last=null;c.addEventListener('pointerdown',e=>{drawing=true;last=[e.offsetX,e.offsetY];c.setPointerCapture(e.pointerId)});c.addEventListener('pointermove',e=>{if(!drawing)return;ctx.beginPath();ctx.moveTo(last[0],last[1]);ctx.lineTo(e.offsetX,e.offsetY);ctx.stroke();last=[e.offsetX,e.offsetY]});c.addEventListener('pointerup',()=>drawing=false);c.addEventListener('pointercancel',()=>drawing=false);return c}const sigTech=setupCanvas('sigTech'),sigClient=setupCanvas('sigClient');document.querySelectorAll('.clear').forEach(b=>b.onclick=()=>{const c=document.getElementById(b.dataset.canvas);c.getContext('2d').clearRect(0,0,c.width,c.height)});
-function val(id){return document.getElementById(id)?.value||''}function checked(name){return document.querySelector(`input[name="${name}"]:checked`)?.value||''}
-function collect(){const controls={};sections.forEach(([title,items],si)=>items.forEach((it,i)=>controls[it]=checked(`c_${si}_${i}`)));return {maintenance:checked('maintenance'),obsolescence:val('obsolescence'),marque:val('marque'),annee:val('annee'),serie:val('serie'),client:val('client'),localisation:val('localisation'),adresse:val('adresse'),ville:val('ville'),reference:val('reference'),observations:val('observations'),pieces:val('pieces'),sangles:val('sangles'),avisService:checked('avisService'),date:val('date'),technicien:val('technicien'),controls, sigTech:sigTech.toDataURL('image/png'),sigClient:sigClient.toDataURL('image/png')}}
+function signatureDataURL(canvas){
+  if(!canvas)return '';
+  try{
+    const rect=canvas.getBoundingClientRect();
+    const width=Math.max(1,Math.round(rect.width||canvas.width));
+    const height=Math.max(1,Math.round(rect.height||canvas.height));
+    const out=document.createElement('canvas');out.width=width;out.height=height;
+    const ctx=out.getContext('2d');ctx.fillStyle='#ffffff';ctx.fillRect(0,0,width,height);
+    ctx.drawImage(canvas,0,0,canvas.width,canvas.height,0,0,width,height);
+    const pixels=ctx.getImageData(0,0,width,height).data;let ink=false;
+    for(let i=0;i<pixels.length;i+=4){if(pixels[i]<235||pixels[i+1]<235||pixels[i+2]<235){ink=true;break;}}
+    return ink?out.toDataURL('image/png'):'';
+  }catch(err){console.error('Capture de signature impossible',err);return '';}
+}
+function val(id){return document.getElementById(id)?.value||''}
+function checked(name){return document.querySelector(`input[name="${name}"]:checked`)?.value||''}
+function collect(){
+  const controls={};sections.forEach(([title,items],si)=>items.forEach((it,i)=>controls[it]=checked(`c_${si}_${i}`)));
+  return {maintenance:checked('maintenance'),obsolescence:val('obsolescence'),marque:val('marque'),annee:val('annee'),serie:val('serie'),client:val('client'),localisation:val('localisation'),adresse:val('adresse'),ville:val('ville'),reference:val('reference'),observations:val('observations'),pieces:val('pieces'),sangles:val('sangles'),avisService:checked('avisService'),date:val('date'),technicien:val('technicien'),controls,sigTech:signatureDataURL(sigTech),sigClient:signatureDataURL(sigClient)}
+}
 
 /* ==========================================================
    MODE MAINTENANCE DE PLUSIEURS LITS — signature client unique
@@ -275,7 +293,8 @@ function renderPDFPage(pdf,d){
   pdf.text(`Maintien en service : ${d.avisService||'—'}`,M,y);
   pdf.text(`Fait le : ${d.date||'—'}    Technicien : ${d.technicien||'—'}`,M,y+5);
   pdf.setFont('helvetica','bold');pdf.text('Signature du technicien',M,y+19);pdf.text('Signature du client',110,y+19);pdf.rect(M,y+21,90,30);pdf.rect(110,y+21,90,30);
-  if(d.sigTech)pdf.addImage(d.sigTech,'PNG',M+2,y+23,86,26);if(d.sigClient)pdf.addImage(d.sigClient,'PNG',112,y+23,86,26);
+  try{if(d.sigTech&&d.sigTech.startsWith('data:image/png;base64,'))pdf.addImage(d.sigTech,'PNG',M+2,y+23,86,26,'sigTech','FAST');}catch(err){console.error('Signature technicien non insérée dans le PDF',err)}
+  try{if(d.sigClient&&d.sigClient.startsWith('data:image/png;base64,'))pdf.addImage(d.sigClient,'PNG',112,y+23,86,26,'sigClient','FAST');}catch(err){console.error('Signature client non insérée dans le PDF',err)}
 }
 
 function makePDFForData(d,pdf){
