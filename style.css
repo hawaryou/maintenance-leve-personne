@@ -196,3 +196,20 @@ input[type="radio"]{width:20px;height:20px;vertical-align:middle;}
 }
 
 .service-status{display:flex;align-items:center;gap:14px;flex-wrap:wrap;border:1px solid #b7c2c8;padding:10px;margin-top:12px;background:#fafcfd}.service-status label{display:inline-flex;align-items:center;gap:5px}.service-status input{accent-color:#274f60}
+
+
+/* Menu HUB EuroMed — position fixe en haut à gauche */
+.hub-menu{position:fixed;top:max(14px,env(safe-area-inset-top));left:max(14px,env(safe-area-inset-left));z-index:1000;display:inline-flex;align-items:center;gap:9px;min-height:46px;padding:0 15px 0 12px;border-radius:14px;background:linear-gradient(135deg,#087db5 0%,#07577f 100%);color:#fff!important;text-decoration:none!important;font-size:14px;font-weight:800;letter-spacing:.35px;box-shadow:0 7px 18px #07577f40,0 2px 5px #0002;border:1px solid #ffffff55;transition:transform .16s ease,box-shadow .16s ease,filter .16s ease;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.hub-menu:hover{transform:translateY(-1px);box-shadow:0 10px 22px #07577f50;filter:brightness(1.06)}
+.hub-menu-icon{width:18px;display:flex;flex-direction:column;gap:4px}.hub-menu-icon span{display:block;height:2px;width:18px;border-radius:2px;background:#fff}.hub-menu-arrow{font-size:15px;opacity:.85}
+.top{padding-left:155px}
+.pdf-preview-modal,.privacy-modal{position:fixed;inset:0;z-index:10000;display:flex;align-items:center;justify-content:center;padding:14px;background:#0b1722b8;opacity:0;visibility:hidden;pointer-events:none;transition:opacity .18s ease,visibility .18s ease}
+.pdf-preview-modal.show,.privacy-modal.show{opacity:1;visibility:visible;pointer-events:auto}
+.pdf-preview-card,.privacy-card{position:relative;width:min(1000px,100%);max-height:94dvh;overflow:auto;background:#fff;border-radius:16px;padding:16px;box-shadow:0 20px 60px #0005}
+.pdf-preview-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.pdf-preview-head h2{font-size:18px;margin:0 0 5px;background:transparent;padding:0}.pdf-preview-head p{margin:0 0 10px;color:#56656d}.modal-close{border:0;background:#eef2f4;color:#263238;font-size:20px;min-width:42px;min-height:42px;border-radius:10px;padding:5px}
+#pdfPreviewFrame{display:block;width:100%;height:min(68dvh,780px);border:1px solid #cbd5da;border-radius:8px;background:#f4f6f8}
+.pdf-preview-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:12px}.pdf-preview-actions button{min-height:46px;font-weight:700}.pdf-preview-status{margin:8px 0 0;font-weight:600;overflow-wrap:anywhere}
+.privacy-card{width:min(680px,100%);padding:22px;line-height:1.55}.privacy-card .modal-close{float:right;margin-left:12px}.privacy-card h2{font-size:19px;padding:0;background:transparent}.privacy-card h3{font-size:15px;color:#274f60;margin:16px 0 5px}.privacy-card p{margin:6px 0}.privacy-link{border:0;padding:4px 5px;min-height:unset;text-decoration:underline;background:transparent;color:#07577f;font-weight:700}
+html{scroll-padding-bottom:160px}body{padding-bottom:20px}footer{padding-bottom:30px;scroll-margin-bottom:170px}
+@media(max-width:760px){.top{padding-left:12px;padding-top:62px}.hub-menu{top:max(8px,env(safe-area-inset-top));left:max(8px,env(safe-area-inset-left));min-height:42px;padding:0 12px;font-size:13px}.pdf-preview-modal,.privacy-modal{padding:7px}.pdf-preview-card,.privacy-card{max-height:96dvh;padding:12px;border-radius:12px}#pdfPreviewFrame{height:58dvh}.pdf-preview-actions{display:grid;grid-template-columns:1fr}.pdf-preview-actions button{width:100%}body{padding-bottom:190px!important}.actions{z-index:30}.privacy-card{line-height:1.5}}
+@media(max-width:390px){.top{padding-top:58px}.actions{grid-template-columns:1fr!important}.actions .primary{min-height:44px}body{padding-bottom:220px!important}}
