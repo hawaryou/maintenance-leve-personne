@@ -190,8 +190,8 @@ function selectNormalMode(){
 batchStart?.addEventListener('click',startBatch);
 normalMode?.addEventListener('click',selectNormalMode);
 batchSave?.addEventListener('click',saveCurrentBedToBatch);
-batchSaveBottom?.addEventListener('click',saveCurrentBedToBatch);
-batchFinishBottom?.addEventListener('click',finishBatch);
+batchSaveBottom?.addEventListener('click',function(){saveCurrentBedToBatch();});
+batchFinishBottom?.addEventListener('click',function(){finishBatch();});
 batchFinish?.addEventListener('click',finishBatch);
 batchCancel?.addEventListener('click',cancelBatch);
 updateBatchUI();
