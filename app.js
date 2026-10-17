@@ -138,22 +138,47 @@ function resetBedFieldsForNext(){
 function startBatch(){
   batchMode=true;batchFinalized=false;batchRecords=[];clearCanvas(sigClient);updateBatchUI();showMessage('Tournée multi-appareils démarrée.','success');window.scrollTo({top:0,behavior:'smooth'});
 }
+function hasCurrentBedData(){
+  const hasControls=sections.some(([title,items],si)=>items.some((it,i)=>!!checked(`c_${si}_${i}`)));
+  return !!(
+    val('serie').trim() ||
+    val('annee').trim() ||
+    val('observations').trim() ||
+    val('pieces').trim() ||
+    val('sangles').trim() ||
+    checked('avisService') ||
+    hasControls ||
+    Number(val('obsolescence')||1)>1
+  );
+}
 function saveCurrentBedToBatch(){
-  if(!batchMode||batchFinalized)return;
+  if(!batchMode||batchFinalized)return false;
   const d=collect();
-  if(!d.serie.trim()){showMessage('Renseignez le N° de série / parc de l’appareil avant de l’enregistrer.','error');document.getElementById('serie')?.focus();return}
+  if(!d.serie.trim()){
+    showMessage('Le contrôle en cours n’a pas été ajouté : renseignez son N° de série / parc, puis réessayez.','error');
+    document.getElementById('serie')?.focus();
+    return false;
+  }
   d.sigClient='';
   batchRecords.push(d);
   updateBatchUI();
   showMessage(`Appareil ${batchRecords.length} enregistré. Préparez l’appareil suivant.`,'success');
   resetBedFieldsForNext();
+  return true;
 }
 function finishBatch(){
-  if(!batchMode)return;
-  const currentSerie=val('serie').trim();
-  if(currentSerie&&!batchFinalized){ saveCurrentBedToBatch(); }
-  if(batchRecords.length===0){showMessage('Enregistrez au moins un appareil avant de terminer la tournée.','error');return;}
-  batchFinalized=true;updateBatchUI();
+  if(!batchMode||batchFinalized)return;
+  // Ne finalise jamais silencieusement une tournée en abandonnant le contrôle en cours.
+  if(hasCurrentBedData()){
+    const saved=saveCurrentBedToBatch();
+    if(!saved)return;
+  }
+  if(batchRecords.length===0){
+    showMessage('Réalisez puis enregistrez au moins un appareil avant de terminer la tournée.','error');
+    return;
+  }
+  batchFinalized=true;
+  updateBatchUI();
   document.getElementById('clientSignatureBlock')?.scrollIntoView({behavior:'smooth',block:'center'});
   showMessage('La tournée est terminée. Faites signer le client une seule fois.','success');
 }
