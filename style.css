@@ -371,3 +371,6 @@ button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px soli
   .actions{background:rgba(7,21,34,.97);border-color:#24465e}
   .actions .primary{font-size:13px}
 }
+
+/* Compatibilité avec les anciennes fiches dont l’aperçu utilise la classe open */
+.pdf-preview-modal.open{opacity:1;visibility:visible;pointer-events:auto}
