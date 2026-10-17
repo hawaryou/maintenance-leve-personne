@@ -86,6 +86,8 @@ const multiModeCard=document.getElementById('multiModeCard');
 const batchSave=document.getElementById('batchSave');
 const batchFinish=document.getElementById('batchFinish');
 const batchCancel=document.getElementById('batchCancel');
+const batchSaveBottom=document.getElementById('batchSaveBottom');
+const batchFinishBottom=document.getElementById('batchFinishBottom');
 const batchStatus=document.getElementById('batchStatus');
 const batchCount=document.getElementById('batchCount');
 const clientSignatureBlock=document.getElementById('clientSignatureBlock');
@@ -103,6 +105,8 @@ function updateBatchUI(){
   batchSave.disabled=!batchMode||batchFinalized;
   batchFinish.disabled=!batchMode||n===0||batchFinalized;
   batchCancel.disabled=!batchMode;
+  if(batchSaveBottom) batchSaveBottom.disabled=!batchMode||batchFinalized;
+  if(batchFinishBottom) batchFinishBottom.disabled=!batchMode||n===0||batchFinalized;
   if(pdfButton) pdfButton.disabled=batchMode&&!batchFinalized;
   if(sendButton) sendButton.disabled=batchMode&&!batchFinalized;
   if(pdfButton) pdfButton.textContent=batchFinalized?'📄 Générer le dossier PDF':'Générer le PDF';
@@ -186,6 +190,8 @@ function selectNormalMode(){
 batchStart?.addEventListener('click',startBatch);
 normalMode?.addEventListener('click',selectNormalMode);
 batchSave?.addEventListener('click',saveCurrentBedToBatch);
+batchSaveBottom?.addEventListener('click',saveCurrentBedToBatch);
+batchFinishBottom?.addEventListener('click',finishBatch);
 batchFinish?.addEventListener('click',finishBatch);
 batchCancel?.addEventListener('click',cancelBatch);
 updateBatchUI();
