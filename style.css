@@ -256,3 +256,118 @@ body:not(.batch-active) #batchSave,body:not(.batch-active) #batchFinish,body:not
 body.batch-active .batch-actions-bottom button{min-height:50px;font-weight:750}
 button:disabled{opacity:.48;cursor:not-allowed;transform:none;box-shadow:none}
 @media(max-width:760px){.top{margin:10px 8px 0;border-radius:14px;padding:14px}.top img{max-width:150px}main{margin:0 8px;padding:14px;border-radius:0 0 14px 14px}.batch-panel{padding:13px}.ident{padding:11px;gap:8px}.control th,.control td{padding:5px;font-size:12px}body.batch-active .batch-actions-bottom{grid-template-columns:1fr}.batch-actions-bottom{padding:10px}.batch-actions-bottom button{width:100%;min-height:48px}}
+
+
+/* EuroMed HUB — thème sombre, contrasté et catégories colorées */
+:root{
+  --em-bg:#071522;--em-ink:#e9f4ff;--em-line:#24465e;
+  --em-blue:#25b9f2;--em-blue-dark:#0877b6;--em-teal:#15d6c5;
+  --em-shadow:0 16px 38px rgba(0,0,0,.28);
+}
+html{background:#071522}
+body{
+  color:#e9f4ff;
+  background:
+    radial-gradient(ellipse at 8% 0%,rgba(13,148,207,.22),transparent 34%),
+    radial-gradient(ellipse at 92% 16%,rgba(124,58,237,.18),transparent 30%),
+    linear-gradient(145deg,#071522,#0b1c2d 58%,#10152c);
+}
+.top,main{
+  background:rgba(12,29,45,.96);color:#e9f4ff;
+  border-color:#24465e;box-shadow:0 16px 38px rgba(0,0,0,.3);
+}
+.top{border-bottom:4px solid #25b9f2}
+.code{color:#63d5ff}
+main{border-top:0}
+.title{
+  background:linear-gradient(115deg,rgba(8,119,182,.23),rgba(124,58,237,.12));
+  border-color:#2b5875;
+}
+h1{color:#8be1ff}
+h2{
+  color:#eaf8ff;
+  background:linear-gradient(90deg,rgba(8,119,182,.34),rgba(21,214,197,.10));
+  border-left:4px solid #25b9f2;
+}
+.section-separator{color:#80ddff}
+.section-separator:before,.section-separator:after{background:linear-gradient(90deg,#0877b6,#15d6c5)}
+.batch-panel,.ident,.sign,.service-status,.obsolescence-panel,.notes>div{
+  color:#e9f4ff;background:linear-gradient(145deg,#10283b,#0c2032);
+  border-color:#2b526b;box-shadow:0 8px 24px rgba(0,0,0,.2);
+}
+.batch-head p,.mode-card-content span{color:#b2c8d8}
+.batch-head h2{background:transparent;border-left:0}
+.batch-count{background:linear-gradient(135deg,#0877b6,#15a9c2);color:#fff}
+.mode-choice{gap:14px}
+.mode-card{
+  background:#0a1b2a;border-color:#31516a;color:#e9f4ff;
+}
+.mode-card.active{background:linear-gradient(135deg,rgba(8,119,182,.26),rgba(21,214,197,.09));border-color:#25b9f2;box-shadow:0 0 0 2px rgba(37,185,242,.16)}
+.mode-card-icon{background:#123d59;color:#7de0ff}
+.mode-multi .mode-card-icon{background:#392665;color:#d7baff}
+.mode-card-content strong{color:#eaf8ff}
+.mode-normal .mode-select{border-color:#15d6c5;color:#67f5e6;background:#0c2e37}
+.mode-multi .mode-select{border-color:#a78bfa;color:#d8c8ff;background:#241b40}
+.mode-card.active .mode-select{background:#0877b6;color:#fff;border-color:#25b9f2}
+.mode-multi.active .mode-select{background:#7546d8;border-color:#a78bfa}
+.batch-status{background:#102d42;color:#dff6ff;border-color:#246185}
+.batch-secondary{background:#14354a;border-color:#2788ae;color:#bcefff}
+.batch-success{background:linear-gradient(135deg,#0b9f8c,#0b786f);border-color:#15d6c5;color:white}
+.batch-danger{background:#431e2a;border-color:#a83d59;color:#ffdce4}
+button{border-radius:11px}
+button:not(:disabled):hover{filter:brightness(1.1)}
+button.primary{background:linear-gradient(135deg,#119ed5,#075f9e);border-color:#25b9f2;color:#fff}
+.hub-menu{background:linear-gradient(135deg,#0ea5e9,#4338ca);box-shadow:0 8px 25px #0006}
+input[type=text],input[type=date],input:not([type]),textarea{
+  background:#071725;color:#f0f9ff;border:1px solid #31556e;
+  border-radius:9px;padding:9px 10px;
+}
+input::placeholder,textarea::placeholder{color:#7896aa}
+input:focus,textarea:focus{border-color:#25b9f2;box-shadow:0 0 0 3px rgba(37,185,242,.15)}
+input[type=radio]{width:21px;height:21px;accent-color:#25b9f2;cursor:pointer;filter:drop-shadow(0 0 2px rgba(37,185,242,.18))}
+.control{
+  min-width:650px;margin:16px 0 20px;border-collapse:separate;border-spacing:0;
+  overflow:hidden;border:1px solid #2c5068;border-radius:13px;
+  background:#0c2031;box-shadow:0 8px 22px rgba(0,0,0,.22);
+}
+.control th{
+  background:linear-gradient(100deg,#075f9e,#0877b6 55%,#0b8f9b);
+  color:#fff;border-color:#27789a;padding:12px 8px;font-size:12px;letter-spacing:.2px;
+}
+.control th.item{text-align:left}
+.control td{background:#10283a;color:#e5f2fc;border-color:#24465e;padding:10px 8px}
+.control tbody tr:nth-child(even) td{background:#0c2234}
+.control tbody tr:hover td{background:#153a50}
+.control td.item{font-weight:600}
+.control td:nth-child(2) input{accent-color:#94a3b8}
+.control td:nth-child(3) input{accent-color:#22c55e;filter:drop-shadow(0 0 3px #22c55e55)}
+.control td:nth-child(4) input{accent-color:#fb536b;filter:drop-shadow(0 0 3px #fb536b55)}
+.obsolescence-title{color:#8be1ff}
+.obs-scale{color:#a9c2d4}
+.obsolescence-panel{background:linear-gradient(110deg,#10283b,#17253d)}
+.service-status{background:#10283b}
+.service-status input{accent-color:#15d6c5}
+.signatures>div{background:#0a1b2a;border:1px solid #31516a;border-radius:12px;padding:10px}
+.signatures strong{color:#dff6ff}
+canvas{background:#fff;border:2px solid #4b7188;border-radius:8px}
+.notes h2{border-left-color:#a78bfa;background:linear-gradient(90deg,#392665,#17243a)}
+textarea{min-height:125px}
+.batch-actions-bottom{background:#0b2031;border-color:#2c526b}
+.actions{background:rgba(7,21,34,.96);border:1px solid #24465e;border-radius:14px;padding:12px}
+#status{color:#a9eaff}
+footer{color:#9cb7c9}
+.privacy-link{color:#80ddff}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:3px solid #7ddfff;outline-offset:2px}
+.pdf-preview-card,.privacy-card,.scan-success-card{background:#f8fbff;color:#142b3a}
+.pdf-preview-head h2,.privacy-card h2{color:#07577f;background:transparent;border-left:0}
+.pdf-preview-head p,.privacy-card p{color:#415969}
+@media(max-width:760px){
+  .top{background:#0c1d2d;margin:8px 8px 0;padding:62px 14px 12px;border-radius:14px}
+  main{background:rgba(12,29,45,.98);margin:0 8px;padding:12px;border-radius:0 0 14px 14px}
+  .control{min-width:640px}
+  .control th,.control td{padding:8px 6px;font-size:12px}
+  .control .item{font-size:13px}
+  .batch-actions-bottom{background:#0b2031}
+  .actions{background:rgba(7,21,34,.97);border-color:#24465e}
+  .actions .primary{font-size:13px}
+}
