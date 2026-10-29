@@ -212,7 +212,7 @@ input[type="radio"]{width:20px;height:20px;vertical-align:middle;}
 .privacy-card{width:min(680px,100%);padding:22px;line-height:1.55}.privacy-card .modal-close{float:right;margin-left:12px}.privacy-card h2{font-size:19px;padding:0;background:transparent}.privacy-card h3{font-size:15px;color:#274f60;margin:16px 0 5px}.privacy-card p{margin:6px 0}.privacy-link{border:0;padding:4px 5px;min-height:unset;text-decoration:underline;background:transparent;color:#07577f;font-weight:700}
 html{scroll-padding-bottom:160px}body{padding-bottom:20px}footer{padding-bottom:30px;scroll-margin-bottom:170px}
 @media(max-width:760px){.top{padding-left:12px;padding-top:62px}.hub-menu{top:max(8px,env(safe-area-inset-top));left:max(8px,env(safe-area-inset-left));min-height:42px;padding:0 12px;font-size:13px}.pdf-preview-modal,.privacy-modal{padding:7px}.pdf-preview-card,.privacy-card{max-height:96dvh;padding:12px;border-radius:12px}#pdfPreviewFrame{height:58dvh}.pdf-preview-actions{display:grid;grid-template-columns:1fr}.pdf-preview-actions button{width:100%}body{padding-bottom:190px!important}.actions{z-index:30}.privacy-card{line-height:1.5}}
-@media(max-width:390px){.top{padding-top:58px}.actions{grid-template-columns:1fr!important}.actions .primary{min-height:44px}body{padding-bottom:220px!important}}
+@media(max-width:390px){.actions{grid-template-columns:1fr!important}.actions .primary{min-height:44px}body{padding-bottom:220px!important}}
 
 
 /* Aperçu PDF mobile : fenêtre et contenu réellement défilables */
@@ -443,7 +443,7 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-vis
 /* EuroMed HUB — choix du thème clair/sombre */
 .theme-toggle{position:fixed;z-index:10050;top:12px;right:12px;display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:44px;padding:10px 14px;border:1px solid #48d8f0;border-radius:999px;background:linear-gradient(135deg,#123b58,#30245c);color:#f4fbff;font:700 14px Arial,Helvetica,sans-serif;box-shadow:0 6px 18px #0003;cursor:pointer;touch-action:manipulation}
 .theme-toggle:focus-visible{outline:3px solid #fbbf24;outline-offset:3px}
-@media(max-width:760px){.theme-toggle{top:calc(8px + env(safe-area-inset-top,0px));right:8px;min-height:44px;padding:9px 11px;font-size:13px}.top{padding-top:58px!important}}
+@media(max-width:760px){.theme-toggle{top:calc(8px + env(safe-area-inset-top,0px));right:8px;min-height:44px;padding:9px 11px;font-size:13px}}
 html[data-theme="light"] body{background:#f2f7fb!important;color:#172b3a!important}
 html[data-theme="light"] main,html[data-theme="light"] .title,html[data-theme="light"] .batch-panel,html[data-theme="light"] .form-section,html[data-theme="light"] .section,html[data-theme="light"] .card,html[data-theme="light"] .panel{background-color:#fff!important;color:#172b3a!important}
 html[data-theme="light"] h1,html[data-theme="light"] h2,html[data-theme="light"] h3,html[data-theme="light"] label,html[data-theme="light"] p,html[data-theme="light"] legend,html[data-theme="light"] .batch-help{color:#20394b}
