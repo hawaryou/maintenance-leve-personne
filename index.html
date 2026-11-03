@@ -171,6 +171,26 @@
   </section>
 
 
+  
+  <section class="euromed-extra" aria-labelledby="euromedExtraTitle">
+    <h2 id="euromedExtraTitle">📷 Photos de l’intervention</h2>
+    <p>Ajoutez jusqu’à 6 photos pour cet appareil. Elles seront compressées puis intégrées au PDF.</p>
+    <label class="photo-picker">📸 Prendre une photo / choisir dans la galerie
+      <input id="maintenancePhotos" type="file" accept="image/*" capture="environment" multiple>
+    </label>
+    <div id="maintenancePhotoList" class="maintenance-photo-list" aria-live="polite"></div>
+    <h2>✍️ Identification du signataire client</h2>
+    <label>Type de signataire
+      <select id="signerType"><option value="private">Particulier</option><option value="institution">Établissement / foyer / institution médicale</option></select>
+    </label>
+    <div class="signer-fields">
+      <label>Prénom du signataire <input id="signerFirstName" autocomplete="given-name" required></label>
+      <label>Nom du signataire <input id="signerLastName" autocomplete="family-name" required></label>
+      <label id="signerRoleWrap" hidden>Fonction / qualité <input id="signerRole" placeholder="Directeur, infirmier, aide-soignant…"></label>
+    </div>
+    <p class="photo-help">En tournée multi-équipements, les photos restent liées à chaque appareil. L’identité et la signature du représentant sont communes à la tournée.</p>
+  </section>
+
   <section class="sign">
     <label>Fait le : <input type="date" id="date"></label>
     <label>Nom Prénom du technicien : <input id="technicien"></label>
@@ -197,10 +217,10 @@
   <details>
     <summary id="privacyNoticeTitle">🔒 Confidentialité et données personnelles</summary>
     <div class="privacy-content">
-      <p><strong>Données traitées :</strong> les informations saisies dans la fiche lève-personnes, les informations d’établissement/client et d’intervention, les observations techniques et les signatures manuscrites numérisées.</p>
+      <p><strong>Données traitées :</strong> les informations saisies dans la fiche lève-personnes, les informations d’établissement/client et d’intervention, les observations techniques et les signatures manuscrites numérisées.</p><p><strong>Photos et signataire :</strong> les photos choisies sont compressées et intégrées au PDF ; le prénom, le nom et, pour un établissement, la fonction du signataire figurent dans le document.</p>
       <p><strong>Finalité :</strong> établir la fiche de maintenance ENR11-V02 et documenter l’intervention pour le suivi technique EuroMed.</p>
       <p><strong>Base légale :</strong> à déterminer et valider par EuroMed selon le contexte contractuel et les obligations applicables. Ne collectez que les données strictement nécessaires à la maintenance.</p>
-      <p><strong>Transmission :</strong> lorsque vous confirmez l’envoi, le PDF et les champs de synthèse prévus sont transmis à Google Apps Script puis envoyés à l’adresse configurée dans le script. La page charge également des bibliothèques depuis des CDN tiers. N’inscrivez aucune donnée de santé ou commentaire personnel non nécessaire.</p>
+      <p><strong>Transmission :</strong> lorsque vous confirmez l’envoi, le PDF et les champs de synthèse prévus sont transmis à Google Apps Script puis envoyés séparément à EuroMed et/ou au client selon les cases cochées. En mode hors connexion, le PDF est conservé dans la file locale de cet appareil jusqu’à la tentative de transmission. La page charge également des bibliothèques depuis des CDN tiers. N’inscrivez aucune donnée de santé ou commentaire personnel non nécessaire.</p>
       <p><strong>Conservation et droits :</strong> EuroMed doit définir et communiquer la durée de conservation des PDF et courriels, l’identité et les coordonnées du responsable de traitement, le contact pour exercer les droits, les éventuels destinataires/sous-traitants et les garanties applicables aux transferts de données.</p>
       <p><strong>Sécurité :</strong> utilisez uniquement un appareil et un réseau autorisés, vérifiez le destinataire avant l’envoi et fermez la page après utilisation. Les bibliothèques externes et les permissions de caméra éventuelles doivent être validées par EuroMed.</p>
       <p class="privacy-warning"><strong>À valider avant mise en production :</strong> cette notice est un modèle de transparence, pas une certification de conformité. EuroMed doit compléter les informations réelles (responsable, base légale, durées, droits, sous-traitants, contrats et mesures de sécurité).</p>
@@ -212,6 +232,16 @@
     <div class="pdf-preview-head"><div><h2 id="pdfPreviewTitle">Aperçu du PDF</h2><p>Vérifiez le document avec le client avant de l’envoyer.</p></div><button type="button" id="closePdfPreview" class="modal-close" aria-label="Fermer l’aperçu">✕</button></div>
     <iframe id="pdfPreviewFrame" title="Aperçu du PDF généré"></iframe>
     <div class="pdf-preview-actions"><button type="button" id="openPdfPreviewTab">↗ Ouvrir le PDF en plein écran</button><button type="button" id="downloadPreviewPdf">⬇ Télécharger le PDF</button><button type="button" id="confirmSendPdf" class="primary">✓ Valider et envoyer par e-mail</button></div>
+    
+    <div class="euromed-recipients">
+      <strong>Destinataires du PDF</strong>
+      <label><input type="checkbox" id="sendToEuroMed" checked> EuroMed (adresse habituelle)</label>
+      <label><input type="checkbox" id="sendToClient"> Client / établissement</label>
+      <label class="client-email-wrap">Adresse e-mail du client
+        <input type="email" id="clientEmail" placeholder="nom@etablissement.fr" autocomplete="email">
+      </label>
+    </div>
+
     <p id="pdfPreviewStatus" class="pdf-preview-status" aria-live="polite"></p>
   </div>
 </div>
