@@ -478,3 +478,115 @@ function closePrivacy(){const m=document.getElementById('privacyModal');m.classL
 document.getElementById('closePrivacy').onclick=closePrivacy;
 document.getElementById('privacyModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closePrivacy()});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){closePDFPreview();closePrivacy()}});
+
+
+/* ===== OPTIONS EUROmed : photos, signataire et destinataires ===== */
+let euromedPhotoItems = [];
+const euromedPhotoInput = document.getElementById('maintenancePhotos');
+const euromedPhotoList = document.getElementById('maintenancePhotoList');
+const euromedSignerType = document.getElementById('signerType');
+const euromedSignerRoleWrap = document.getElementById('signerRoleWrap');
+function euromedRenderPhotoList(){
+  if(!euromedPhotoList)return;
+  euromedPhotoList.replaceChildren();
+  euromedPhotoItems.forEach((photo,index)=>{
+    const card=document.createElement('div');card.className='maintenance-photo-thumb';
+    const img=document.createElement('img');img.src=photo.data;img.alt='Photo intervention '+(index+1);
+    const caption=document.createElement('span');caption.textContent='Photo '+(index+1);
+    const remove=document.createElement('button');remove.type='button';remove.textContent='Retirer';remove.addEventListener('click',()=>{euromedPhotoItems.splice(index,1);euromedRenderPhotoList()});
+    card.append(img,caption,remove);euromedPhotoList.append(card);
+  });
+  if(euromedPhotoInput)euromedPhotoInput.disabled=euromedPhotoItems.length>=6;
+}
+function euromedCompressPhoto(file){
+  return new Promise((resolve,reject)=>{
+    const reader=new FileReader();
+    reader.onerror=()=>reject(new Error('Lecture de la photo impossible.'));
+    reader.onload=()=>{
+      const img=new Image();
+      img.onerror=()=>reject(new Error('Format photo non pris en charge.'));
+      img.onload=()=>{
+        const scale=Math.min(1,1400/Math.max(img.naturalWidth,img.naturalHeight));
+        const canvas=document.createElement('canvas');
+        canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));
+        canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));
+        const ctx=canvas.getContext('2d');
+        ctx.fillStyle='#fff';ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0,canvas.width,canvas.height);
+        resolve({data:canvas.toDataURL('image/jpeg',0.68),name:String(file.name||'photo').replace(/[<>"]/g,'').slice(0,80)});
+      };
+      img.src=reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+euromedPhotoInput?.addEventListener('change',async()=>{
+  const files=Array.from(euromedPhotoInput.files||[]);
+  if(euromedPhotoItems.length+files.length>6){showMessage?.('Maximum 6 photos par appareil.','info');}
+  for(const file of files.slice(0,Math.max(0,6-euromedPhotoItems.length))){
+    if(!file.type.startsWith('image/'))continue;
+    try{euromedPhotoItems.push(await euromedCompressPhoto(file));}
+    catch(error){console.warn(error);showMessage?.('Une photo n’a pas pu être ajoutée.','error');}
+  }
+  euromedPhotoInput.value='';euromedRenderPhotoList();
+});
+function euromedSyncSignerRole(){
+  const institutional=euromedSignerType?.value==='institution';
+  if(euromedSignerRoleWrap)euromedSignerRoleWrap.hidden=!institutional;
+  const role=document.getElementById('signerRole');if(role)role.required=!!institutional;
+}
+euromedSignerType?.addEventListener('change',euromedSyncSignerRole);euromedSyncSignerRole();
+function euromedValidateSigner(){
+  const first=document.getElementById('signerFirstName')?.value.trim()||'';
+  const last=document.getElementById('signerLastName')?.value.trim()||'';
+  const role=document.getElementById('signerRole')?.value.trim()||'';
+  if(!first||!last)throw new Error('Renseignez le prénom et le nom du signataire client.');
+  if(euromedSignerType?.value==='institution'&&!role)throw new Error('Renseignez la fonction du représentant de l’établissement.');
+}
+const euromedOriginalCollect=collect;
+collect=function(){
+  const data=euromedOriginalCollect();
+  data.photos=euromedPhotoItems.map(p=>({...p}));
+  data.signerType=euromedSignerType?.value||'private';
+  data.signerFirstName=document.getElementById('signerFirstName')?.value.trim()||'';
+  data.signerLastName=document.getElementById('signerLastName')?.value.trim()||'';
+  data.signerRole=document.getElementById('signerRole')?.value.trim()||'';
+  return data;
+};
+const euromedOriginalRenderPDFPage=renderPDFPage;
+renderPDFPage=function(pdf,data){
+  euromedOriginalRenderPDFPage(pdf,data);
+  const first=document.getElementById('signerFirstName')?.value.trim()||data.signerFirstName||'';
+  const last=document.getElementById('signerLastName')?.value.trim()||data.signerLastName||'';
+  const role=document.getElementById('signerRole')?.value.trim()||data.signerRole||'';
+  const photos=Array.isArray(data.photos)?data.photos:[];
+  if(!first&&!last&&!photos.length)return;
+  pdf.addPage();
+  pdf.setFont('helvetica','bold');pdf.setFontSize(15);pdf.text('SIGNATAIRE ET PHOTOGRAPHIES',105,18,{align:'center'});
+  pdf.setFont('helvetica','normal');pdf.setFontSize(11);
+  pdf.text('Signataire : '+(first+' '+last).trim(),15,32);
+  pdf.text('Type : '+((euromedSignerType?.value||data.signerType)==='institution'?'Représentant d’établissement':'Particulier'),15,40);
+  if(role)pdf.text('Fonction : '+role,15,48);
+  if(photos.length){
+    pdf.setFont('helvetica','bold');pdf.text('Photos de l’intervention',15,62);
+    let y=70;
+    photos.forEach((photo,index)=>{
+      if(index>0){pdf.addPage();y=20;}
+      else if(y>250){pdf.addPage();y=20;}
+      pdf.setFont('helvetica','normal');pdf.setFontSize(9);pdf.text('Photo '+(index+1)+' — '+(photo.name||'Intervention'),15,y);
+      try{pdf.addImage(photo.data,'JPEG',15,y+5,180,112,undefined,'FAST');}
+      catch(error){console.warn('Photo non intégrée au PDF',error);pdf.setFontSize(9);pdf.text('Photo indisponible dans le PDF.',15,y+12);}
+      y+=125;
+    });
+  }
+};
+function euromedClearPhotos(){euromedPhotoItems=[];euromedRenderPhotoList();}
+if(typeof resetBedFieldsForNext==='function'){
+  const _euromedResetBed=resetBedFieldsForNext;
+  resetBedFieldsForNext=function(){_euromedResetBed.apply(this,arguments);euromedClearPhotos();};
+}
+if(typeof resetFieldsForNext==='function'){
+  const _euromedResetFields=resetFieldsForNext;
+  resetFieldsForNext=function(){_euromedResetFields.apply(this,arguments);euromedClearPhotos();};
+}
+const euromedOriginalGeneratePDF=generateCurrentOrBatchPDF;
+generateCurrentOrBatchPDF=async function(){euromedValidateSigner();return euromedOriginalGeneratePDF.apply(this,arguments);};
