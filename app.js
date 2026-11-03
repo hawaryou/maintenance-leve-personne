@@ -381,9 +381,14 @@ function renderPDFPage(pdf,d){
 
   pdf.text(`Maintien en service : ${d.avisService||'—'}`,M,y);
   pdf.text(`Fait le : ${d.date||'—'}    Technicien : ${d.technicien||'—'}`,M,y+5);
-  pdf.setFont('helvetica','bold');pdf.text('Signature du technicien',M,y+19);pdf.text('Signature du client',110,y+19);pdf.rect(M,y+21,90,30);pdf.rect(110,y+21,90,30);
-  try{if(d.sigTech&&d.sigTech.startsWith('data:image/png;base64,'))pdf.addImage(d.sigTech,'PNG',M+2,y+23,86,26,'sigTech','FAST');}catch(err){console.error('Signature technicien non insérée dans le PDF',err)}
-  try{if(d.sigClient&&d.sigClient.startsWith('data:image/png;base64,'))pdf.addImage(d.sigClient,'PNG',112,y+23,86,26,'sigClient','FAST');}catch(err){console.error('Signature client non insérée dans le PDF',err)}
+  const signerFirst=String(d.signerFirstName||document.getElementById('signerFirstName')?.value||'').trim();
+  const signerLast=String(d.signerLastName||document.getElementById('signerLastName')?.value||'').trim();
+  const signerRole=String(d.signerRole||document.getElementById('signerRole')?.value||'').trim();
+  pdf.setFont('helvetica','bold');pdf.setFontSize(7);pdf.text('IDENTIFICATION DU SIGNATAIRE CLIENT',110,y+19);
+  pdf.setFont('helvetica','normal');pdf.setFontSize(7);pdf.text('Nom : '+([signerFirst,signerLast].filter(Boolean).join(' ')||'—'),110,y+23,{maxWidth:86});if(signerRole)pdf.text('Fonction : '+signerRole,110,y+27,{maxWidth:86});
+  pdf.setFont('helvetica','bold');pdf.setFontSize(8);pdf.text('Signature du technicien',M,y+32);pdf.text('Signature du client',110,y+32);pdf.rect(M,y+34,90,18);pdf.rect(110,y+34,90,18);
+  try{if(d.sigTech&&d.sigTech.startsWith('data:image/png;base64,'))pdf.addImage(d.sigTech,'PNG',M+2,y+35,86,16,'sigTech','FAST');}catch(err){console.error('Signature technicien non insérée dans le PDF',err)}
+  try{if(d.sigClient&&d.sigClient.startsWith('data:image/png;base64,'))pdf.addImage(d.sigClient,'PNG',112,y+35,86,16,'sigClient','FAST');}catch(err){console.error('Signature client non insérée dans le PDF',err)}
 }
 
 function makePDFForData(d,pdf){
