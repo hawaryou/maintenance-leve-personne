@@ -561,29 +561,19 @@ collect=function(){
 const euromedOriginalRenderPDFPage=renderPDFPage;
 renderPDFPage=function(pdf,data){
   euromedOriginalRenderPDFPage(pdf,data);
-  const first=document.getElementById('signerFirstName')?.value.trim()||data.signerFirstName||'';
-  const last=document.getElementById('signerLastName')?.value.trim()||data.signerLastName||'';
-  const role=document.getElementById('signerRole')?.value.trim()||data.signerRole||'';
   const photos=Array.isArray(data.photos)?data.photos:[];
-  if(!first&&!last&&!photos.length)return;
-  pdf.addPage();
-  pdf.setFont('helvetica','bold');pdf.setFontSize(15);pdf.text('SIGNATAIRE ET PHOTOGRAPHIES',105,18,{align:'center'});
-  pdf.setFont('helvetica','normal');pdf.setFontSize(11);
-  pdf.text('Signataire : '+(first+' '+last).trim(),15,32);
-  pdf.text('Type : '+((euromedSignerType?.value||data.signerType)==='institution'?'Représentant d’établissement':'Particulier'),15,40);
-  if(role)pdf.text('Fonction : '+role,15,48);
-  if(photos.length){
-    pdf.setFont('helvetica','bold');pdf.text('Photos de l’intervention',15,62);
-    let y=70;
-    photos.forEach((photo,index)=>{
-      if(index>0){pdf.addPage();y=20;}
-      else if(y>250){pdf.addPage();y=20;}
-      pdf.setFont('helvetica','normal');pdf.setFontSize(9);pdf.text('Photo '+(index+1)+' — '+(photo.name||'Intervention'),15,y);
-      try{pdf.addImage(photo.data,'JPEG',15,y+5,180,112,undefined,'FAST');}
-      catch(error){console.warn('Photo non intégrée au PDF',error);pdf.setFontSize(9);pdf.text('Photo indisponible dans le PDF.',15,y+12);}
-      y+=125;
-    });
-  }
+  if(!photos.length)return;
+  // Les informations du signataire sont déjà imprimées sur la fiche, juste au-dessus de sa signature.
+  // Réserver les pages annexes exclusivement aux photographies.
+  photos.forEach((photo,index)=>{
+    pdf.addPage();
+    pdf.setFont('helvetica','bold');pdf.setFontSize(13);
+    pdf.text('PHOTOGRAPHIES DE L’INTERVENTION',105,18,{align:'center'});
+    pdf.setFont('helvetica','normal');pdf.setFontSize(9);
+    pdf.text('Photo '+(index+1)+' — '+(photo.name||'Intervention'),15,32,{maxWidth:180});
+    try{pdf.addImage(photo.data,'JPEG',15,38,180,112,undefined,'FAST');}
+    catch(error){console.warn('Photo non intégrée au PDF',error);pdf.text('Photo indisponible dans le PDF.',15,45);}
+  });
 };
 function euromedClearPhotos(){euromedPhotoItems=[];euromedRenderPhotoList();}
 if(typeof resetBedFieldsForNext==='function'){
